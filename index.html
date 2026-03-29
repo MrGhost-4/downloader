@@ -40,7 +40,6 @@
             document.getElementById("status").innerHTML = "Analyzing source... (" + timeLeft + "s)";
             if(timeLeft <= 0) {
                 clearInterval(interval);
-                // THE HANDOVER: Sends link to verify.html
                 window.location.href = "verify.html?url=" + encodeURIComponent(url);
             }
         }, 1000);
