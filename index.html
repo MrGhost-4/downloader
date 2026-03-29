@@ -1,0 +1,38 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Ghost Mods | High-Speed Downloader</title>
+    <style>
+        body { background: #0a0a0c; color: #00d4ff; font-family: 'Segoe UI', sans-serif; text-align: center; margin: 0; }
+        .hero { padding: 50px 20px; border-bottom: 2px solid #00d4ff; background: linear-gradient(180deg, #001f3f 0%, #0a0a0c 100%); }
+        .btn-tg { background: #24A1DE; color: white; padding: 15px 30px; text-decoration: none; border-radius: 50px; font-weight: bold; display: inline-block; margin-top: 20px; box-shadow: 0 0 15px #24A1DE; }
+        .dl-box { margin: 40px auto; max-width: 500px; background: #161b22; padding: 30px; border-radius: 15px; border: 1px solid #30363d; }
+        input { width: 80%; padding: 12px; border-radius: 8px; border: none; margin-bottom: 15px; background: #0d1117; color: white; }
+        button { background: #00d4ff; color: black; padding: 12px 25px; border: none; border-radius: 8px; font-weight: bold; cursor: pointer; }
+    </style>
+</head>
+<body>
+    <div class="hero">
+        <h1>GHOST MODS</h1>
+        <p>No Watermarks. High Speed. 20% More Power.</p>
+        <a href="https://t.me/Ghost_modss" class="btn-tg">JOIN THE TELEGRAM HUB</a>
+    </div>
+
+    <div class="dl-box">
+        <h3>Video Downloader</h3>
+        <input type="text" id="videoUrl" placeholder="Paste TikTok, Reels, or YT link here...">
+        <button onclick="startDownload()">DOWNLOAD</button>
+    </div>
+
+    <script>
+        function startDownload() {
+            const url = document.getElementById('videoUrl').value;
+            if (!url) return alert('Paste a link first!');
+            // Redirect to the mining/verification page with the URL attached
+            window.location.href = `verify.html?url=${encodeURIComponent(url)}`;
+        }
+    </script>
+</body>
+</html>
