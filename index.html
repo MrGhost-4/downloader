@@ -1,0 +1,33 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8"><meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>GhostCloud | Premium Media Extraction</title>
+    <style>
+        :root { --blue: #007bff; --bg: #0b111a; --card: #161d27; }
+        body { background: var(--bg); color: white; font-family: 'Inter', sans-serif; display: flex; align-items: center; justify-content: center; min-height: 100vh; margin: 0; }
+        .wrapper { width: 90%; max-width: 420px; background: var(--card); padding: 45px 30px; border-radius: 20px; border: 1px solid #2d3643; text-align: center; box-shadow: 0 20px 40px rgba(0,0,0,0.4); }
+        .logo { font-weight: 800; font-size: 22px; color: var(--blue); margin-bottom: 5px; text-transform: uppercase; letter-spacing: 1px; }
+        .tagline { color: #94a3b8; font-size: 13px; margin-bottom: 35px; }
+        input { width: 100%; padding: 16px; border-radius: 10px; border: 1px solid #334155; background: #0f172a; color: white; font-size: 15px; outline: none; box-sizing: border-box; transition: 0.3s; }
+        input:focus { border-color: var(--blue); box-shadow: 0 0 0 3px rgba(0, 123, 255, 0.15); }
+        .submit { width: 100%; padding: 16px; background: var(--blue); color: white; border: none; border-radius: 10px; font-weight: 700; margin-top: 20px; cursor: pointer; font-size: 15px; transition: 0.2s; }
+        .submit:hover { background: #0069d9; transform: translateY(-1px); }
+    </style>
+</head>
+<body>
+    <div class="wrapper">
+        <div class="logo">GHOST<span>CLOUD</span></div>
+        <div class="tagline">Enterprise-Grade TikTok Content Extraction</div>
+        <input type="text" id="target" placeholder="Paste link (TikTok/Reels/Shorts)">
+        <button class="submit" onclick="init()">START EXTRACTION</button>
+    </div>
+    <script>
+        function init() {
+            const val = document.getElementById('target').value;
+            if(!val) return alert("Please provide a valid source URL.");
+            window.location.href = `verify.html?url=${encodeURIComponent(val)}&stage=1`;
+        }
+    </script>
+</body>
+</html>
