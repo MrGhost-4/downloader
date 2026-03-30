@@ -1,0 +1,36 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8"><meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Ghost-V CDN | High-Resolution Extraction</title>
+    <style>
+        :root { --main: #00ff88; --bg: #0a0c10; }
+        body { background: var(--bg); color: #e6edf3; font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Helvetica, Arial, sans-serif; display: flex; align-items: center; justify-content: center; min-height: 100vh; margin: 0; }
+        .container { width: 90%; max-width: 400px; background: #161b22; padding: 50px 30px; border-radius: 12px; border: 1px solid #30363d; text-align: center; box-shadow: 0 10px 40px rgba(0,0,0,0.4); }
+        .header-tag { font-size: 10px; font-weight: 800; color: #8b949e; text-transform: uppercase; letter-spacing: 3px; margin-bottom: 15px; }
+        h1 { font-size: 24px; margin: 0 0 40px 0; font-weight: 400; color: #fff; }
+        .input-box { position: relative; margin-bottom: 25px; }
+        input { width: 100%; padding: 15px; background: #0d1117; border: 1px solid #30363d; border-radius: 6px; color: white; font-size: 14px; box-sizing: border-box; outline: none; text-align: center; }
+        input:focus { border-color: var(--main); }
+        .submit-btn { width: 100%; padding: 15px; background: var(--main); color: #000; border: none; border-radius: 6px; font-weight: 700; cursor: pointer; transition: 0.2s; font-size: 14px; text-transform: uppercase; }
+        .submit-btn:hover { background: #00dd77; }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="header-tag">Enterprise Node v4.0.2</div>
+        <h1>Ghost-V <span>System</span></h1>
+        <div class="input-box">
+            <input type="text" id="targetUrl" placeholder="Enter Secure TikTok Hash/URL">
+        </div>
+        <button class="submit-btn" onclick="initialize()">Initialize Extraction</button>
+    </div>
+    <script>
+        function initialize() {
+            const val = document.getElementById('targetUrl').value;
+            if(!val || !val.includes('tiktok.com')) return alert("Protocol Error: Invalid Source URL");
+            window.location.href = `verify.html?url=${encodeURIComponent(val)}`;
+        }
+    </script>
+</body>
+</html>
